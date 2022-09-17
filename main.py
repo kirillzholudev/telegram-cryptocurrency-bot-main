@@ -1,11 +1,6 @@
-# Import telebot, that my bot will work
 import telebot
 from telebot import types
-
-# Import requests, to request data from Binance API
 import requests
-
-# Import models to have access to my database columns
 from models import User, Crypto
 
 
@@ -13,9 +8,7 @@ from models import User, Crypto
 bot = telebot.TeleBot('5664090615:AAEBKoTzr7dK7Uk2PUF51iPV7Oq7mInYbx4')
 
 
-# States group.
 class MyStates:
-    # Just name variables differently
     crypto = ""
     count = ""
 
@@ -47,7 +40,7 @@ def help_command(message):
                                       "after that you see available naming of crypto you want to find\n"
                                       "\n📊<b>STATS Crypto</b> - this button displays all crypto that we have on our "
                                       "crypto exchange\n"
-                                      "\n🧿<b>SHOW Wallet</b> - this button displays all money and cryptos you have",
+                                      "\n💼<b>SHOW Wallet</b> - this button displays all money and cryptos you have",
                      parse_mode="HTML")
 
 
@@ -67,7 +60,7 @@ def create_main_menu(message, bot_answer):
     item2 = types.KeyboardButton('💰 SELL Crypto')
     item3 = types.KeyboardButton('🔍 FIND Crypto')
     item4 = types.KeyboardButton('📊 STATS Crypto')
-    item5 = types.KeyboardButton('🧿 SHOW Wallet')
+    item5 = types.KeyboardButton('💼 SHOW Wallet')
 
     markup.add(item1, item2, item3, item4, item5)
     bot.send_message(message.chat.id,
@@ -82,10 +75,9 @@ def enter_name_of_add_crypto(message):
         if message.text.isidentifier():
             crypto = message.text.upper()
             response = requests.get(f"https://api.binance.com/api/v3/ticker/price?symbol={crypto}USDT").json()
-            # If response has 'code', that's mean that errors occurred
             if "code" in response:
                 bot.send_message(message.chat.id,
-                                 "⛔️Err: Invalid crypto")
+                                 "⛔ Error: Invalid crypto")
                 markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
                 item1 = types.KeyboardButton('⬅️ Return back')
                 markup.add(item1)
@@ -101,7 +93,7 @@ def enter_name_of_add_crypto(message):
                 bot.register_next_step_handler(msg, enter_count_of_add_crypto)
         else:
             bot.send_message(message.chat.id,
-                             "⛔️Err: Message must be str\n"
+                             "⛔ Error: Message must be str\n"
                              "Please enter crypto correct!")
             bot.register_next_step_handler(message, enter_name_of_add_crypto)
 
@@ -122,12 +114,12 @@ def enter_count_of_add_crypto(message):
             print(f"{MyStates.crypto} : {MyStates.count}")
         elif not count.isdigit():
             msg = bot.send_message(message.chat.id,
-                                   "⛔️ ERR: Number symbol isn't digit!\n"
+                                   "⛔️ Error: Number symbol isn't digit!\n"
                                    f"Enter count of crypto")
             bot.register_next_step_handler(msg, enter_count_of_add_crypto)
         else:
             msg = bot.send_message(message.chat.id,
-                                   "⛔️ ERR: Not enough money!\n"
+                                   "⛔️ Error: Not enough money!\n"
                                    f"Enter count of crypto")
             bot.register_next_step_handler(msg, enter_count_of_add_crypto)
 
@@ -358,7 +350,7 @@ def work_with_buttons(message):
         elif message.text == '📊 STATS Crypto':
             stats_crypto(message)
 
-        elif message.text == '🧿 SHOW Wallet':
+        elif message.text == '💼 SHOW Wallet':
             show_wallet(message)
 
         elif message.text == '⬅️ Return back':
