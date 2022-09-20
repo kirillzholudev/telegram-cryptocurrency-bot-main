@@ -5,7 +5,7 @@ from models import User, Crypto
 
 
 
-bot = telebot.TeleBot('')
+bot = telebot.TeleBot('5664090615:AAEBKoTzr7dK7Uk2PUF51iPV7Oq7mInYbx4')
 
 
 class MyStates:
